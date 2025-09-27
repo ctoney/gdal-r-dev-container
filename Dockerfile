@@ -1,6 +1,9 @@
 FROM rocker/r-ver:latest
 
 # Install build dependencies
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
 RUN add-apt-repository ppa:ubuntugis/ubuntugis-unstable && \
   apt-get update && apt-get install -y \
   git \
@@ -10,6 +13,9 @@ RUN add-apt-repository ppa:ubuntugis/ubuntugis-unstable && \
   libgeos-dev \
   libsqlite3-dev \
   libspatialite-dev \
+  librasterlite2-1 \
+  librasterlite2-dev \
+  libpq-dev \
   libcurl4-openssl-dev \
   libxml2-dev \
   libtiff5-dev \
@@ -18,15 +24,25 @@ RUN add-apt-repository ppa:ubuntugis/ubuntugis-unstable && \
   libpng-dev \
   libnetcdf-dev \
   libhdf5-dev \
+  libdeflate-dev \
   libopenjp2-7-dev \
+  libavif-dev \
+  libde265-dev \
+  libheif-dev \
   libblosc-dev \
+  libjxl-dev \
+  liblerc-dev \
   libzstd-dev \
   liblz4-dev \
   liblzma-dev \
   libwebp-dev \
   libexpat1-dev \
+  libexprtk-dev \
   libmuparser-dev \
+  libsfcgal-dev \
   zlib1g-dev \
+  libarmadillo-dev \
+  libcrypto++-dev \
   python3-dev \
   python3-numpy \
   python3-pip \
@@ -60,6 +76,7 @@ RUN apt-get update && apt-get install -y -V \
   libgandiva-glib-dev \
   libparquet-dev \
   libparquet-glib-dev \
+  libadbc-driver-manager-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Clone and build GDAL from source
@@ -68,8 +85,8 @@ RUN git clone https://github.com/OSGeo/gdal.git
 WORKDIR /tmp/gdal
 
 ###  Enable for PR (pull/#/head:<local-branch-name>)
-# RUN git fetch origin pull/13121/head:fix_13119
-# RUN git checkout fix_13119
+RUN git fetch origin pull/13121/head:fix_13119
+RUN git checkout fix_13119
 ###  End enable for PR
 
 RUN mkdir build
